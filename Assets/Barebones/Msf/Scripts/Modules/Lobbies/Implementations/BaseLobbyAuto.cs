@@ -8,7 +8,7 @@ namespace Barebones.MasterServer
 {
     public class BaseLobbyAuto : BaseLobby
     {
-        public float WaitSecondsAfterMinPlayersReached = 10;
+        public float WaitSecondsAfterMinPlayersReached = 2;
         public float WaitSecondsAfterFullTeams = 5;
 
         public BaseLobbyAuto(int lobbyId, IEnumerable<LobbyTeam> teams, LobbiesModule module, LobbyConfig config) : base(lobbyId, teams, module, config)
