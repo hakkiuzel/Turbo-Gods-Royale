@@ -49,7 +49,7 @@ namespace Barebones.MasterServer
         {
             RawData = data;
             IsLobby = data.Type == GameInfoType.Lobby;
-            SetIsSelected(true);
+            SetIsSelected(false);
             Name.text = data.Name;
             GameId = data.Id;
             LockImage.SetActive(data.IsPasswordProtected);
