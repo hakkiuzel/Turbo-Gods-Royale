@@ -58,7 +58,7 @@ public class MiniPlayerController : NetworkBehaviour
         _characterController = GetComponent<CharacterController>();
         _characterController.detectCollisions = false;
 
-        StartCoroutine(DisplayName());
+      
     }
 
     public void Setup(string username)
@@ -66,11 +66,7 @@ public class MiniPlayerController : NetworkBehaviour
         Name = username;
     }
 
-    public override void OnStartClient()
-    {
-        SetWeapon(WeaponSpriteName);
-        SetFlagColor(FlagColor);
-    }
+ 
 
     public override void OnStartAuthority()
     {

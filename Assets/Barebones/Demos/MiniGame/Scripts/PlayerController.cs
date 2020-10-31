@@ -13,11 +13,12 @@ using Random = UnityEngine.Random;
 
 public class PlayerController : NetworkBehaviour
 {
-     
- 
+
+
 
     [SyncVar]
     public string Name;
+    private Transform mytransform;
 
     public Animator anim;
     private Text _nameObject;
@@ -36,7 +37,7 @@ public class PlayerController : NetworkBehaviour
 
     public float turnRotationAngle;
     public float turnRotationSeekSpeed;
-    
+
 
 
 
@@ -46,24 +47,34 @@ public class PlayerController : NetworkBehaviour
     public GameObject bulletPrefab;
     public Transform bulletSpawn;
 
-
-
+    private RaycastHit hit;
+    
+   
+    public int damage = 1;
 
     // Use this for initialization
     private void Awake()
     {
-        
+
         StartCoroutine(DisplayName());
+       
         rb = GetComponent<Rigidbody>();
         anim = GetComponentInChildren<Animator>();
-        
+        mytransform = transform;
+
     }
+
+     void Start()
+    {
+        transform.name = Name;
+    }
+
 
 
     void FixedUpdate()
     {
 
- 
+
         RaycastHit hit;
         foreach (Transform thruster in thrusters)
         {
@@ -101,7 +112,7 @@ public class PlayerController : NetworkBehaviour
             rb.drag = 0;
         }
 
-        
+
 
 
         Vector3 turnTorque = Vector3.up * rotationRate * CrossPlatformInputManager.GetAxis("Horizontal");
@@ -111,8 +122,8 @@ public class PlayerController : NetworkBehaviour
         Vector3 newRotation = transform.eulerAngles;
         newRotation.z = Mathf.SmoothDampAngle(newRotation.z, CrossPlatformInputManager.GetAxis("Horizontal") * -turnRotationAngle, ref rotationVelocity, turnRotationSeekSpeed);
         transform.eulerAngles = newRotation;
-        
-    
+
+
 
     }
 
@@ -121,7 +132,7 @@ public class PlayerController : NetworkBehaviour
     {
         var bullet = (GameObject)Instantiate(bulletPrefab, bulletSpawn.position, bulletSpawn.rotation);
 
-        bullet.GetComponent<Rigidbody>().velocity = bullet.transform.forward * 10;
+        bullet.GetComponent<Rigidbody>().velocity = bullet.transform.forward * 300;
 
         NetworkServer.Spawn(bullet);
 
@@ -161,10 +172,11 @@ public class PlayerController : NetworkBehaviour
             Debug.Log("idle");
         }
 
-        if (CrossPlatformInputManager.GetButton("Fire1") )
+        if (CrossPlatformInputManager.GetButton("Fire1"))
         {
             Debug.Log("feuer");
-            CmdFire();
+            
+            Shoot();
         }
 
 
@@ -177,21 +189,45 @@ public class PlayerController : NetworkBehaviour
 
 
 
+    void Shoot()
+    {
+        CmdFire();
+        if (Physics.Raycast(bulletSpawn.TransformPoint (0,0,0.5f), bulletSpawn.forward,out hit, 200))
+        {
+            Debug.Log(hit.transform.tag);
+        }
 
+        if (hit.transform.tag == "Player")
+        {
+            string uidentity = hit.transform.name;
+            CmdTellServerWhoWasShot(uidentity, damage);
+        }
 
+    }
+
+    [Command]
+    void CmdTellServerWhoWasShot(string uniqueID, int damage)
+    {
+        GameObject go = GameObject.Find(uniqueID);
+        // Apply damage to that player ;
+
+        go.GetComponent<Player_Health>().DetuctHealth(damage);
+
+    }
 
 
 
     public void Setup(string username)
     {
         Name = username;
+       
     }
 
-   
- 
- 
 
-  
+
+
+
+
 
     public void MoveToRandomSpawnPoint()
     {
@@ -199,21 +235,22 @@ public class PlayerController : NetworkBehaviour
         var spawn = spawns[Random.Range(0, spawns.Length)];
         transform.position = spawn.transform.position;
     }
- 
 
-    
- 
- 
- 
 
-   
- 
+
+
+
+
+
+
+
 
     public IEnumerator DisplayName()
     {
         // Create a player name
         _nameObject = Instantiate(NamePrefab).GetComponent<Text>();
         _nameObject.text = Name ?? ".";
+        
         _nameObject.transform.SetParent(FindObjectOfType<Canvas>().transform);
 
         while (true)
@@ -223,7 +260,7 @@ public class PlayerController : NetworkBehaviour
 
             // While we're still "online"
             _nameObject.transform.position = RectTransformUtility
-                                                .WorldToScreenPoint(Camera.main, NameTransform.position) + Vector2.up*30;
+                                                .WorldToScreenPoint(Camera.main, NameTransform.position) + Vector2.up * 30;
 
             yield return 0;
         }

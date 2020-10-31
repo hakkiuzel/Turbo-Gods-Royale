@@ -32,7 +32,7 @@ public class MiniNetworkManager : NetworkManager
         }
 
         NetworkServer.AddPlayerForConnection(connection, player.gameObject, 0);
-        player.SetWeapon(weaponSprite);
+        
         player.Setup(playerName);
 
         return player;

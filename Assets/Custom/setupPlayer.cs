@@ -13,25 +13,19 @@ public class setupPlayer : NetworkBehaviour
     public GameObject playerCam;
     public GameObject playerIcon;
     public GameObject remoteIcon;
-  
- 
-   
-     
- 
+
+
+
+
+
 
     [SerializeField]
     private Camera cam;
 
+
+
+
    
-
- 
- void Update()
-    {
-
-
-       
-        
-    }
 
     Animator animator;
 
@@ -60,18 +54,21 @@ public class setupPlayer : NetworkBehaviour
         if (animState == aS) return;
         animState = aS;
         Debug.Log(animState);
-        if (animState == "idle") {  
+        if (animState == "idle")
+        {
             animator.SetBool("Idling", true);
             animator.SetBool("Links", false);
             animator.SetBool("Rechts", false);
-    }
-        else if (animState == "rechts") { 
+        }
+        else if (animState == "rechts")
+        {
             animator.SetBool("Rechts", true);
             animator.SetBool("Idling", false);
             animator.SetBool("Links", false);
         }
-        else if (animState == "links") { 
-            animator.SetBool("Links",true);
+        else if (animState == "links")
+        {
+            animator.SetBool("Links", true);
             animator.SetBool("Rechts", false);
             animator.SetBool("Idling", false);
         }
@@ -88,49 +85,50 @@ public class setupPlayer : NetworkBehaviour
     void Start()
     {
         animator = GetComponentInChildren<Animator>();
-        animator.SetBool("Idling",true);
-         
+        animator.SetBool("Idling", true);
+
         if (isLocalPlayer)
         {
-            GetComponent<PlayerController>().enabled = true;
+            
             playerCam.SetActive(true);
             playerIcon.SetActive(true);
             remoteIcon.SetActive(false);
-            
-            
+
+
 
         }
         else
         {
             GetComponent<PlayerController>().enabled = false;
+            
             playerCam.SetActive(false);
             remoteIcon.SetActive(true);
             playerIcon.SetActive(false);
-            
-           
-            
+
+
+
         }
-       
- 
+
+
     }
 
 
 
 
- 
-    }
 
-
-     
+}
 
 
 
 
 
-   
 
 
-   
+
+
+
+
+
 
 
 

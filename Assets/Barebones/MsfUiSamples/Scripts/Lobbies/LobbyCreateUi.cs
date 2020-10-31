@@ -63,7 +63,8 @@ namespace Barebones.MasterServer
             var loadingPromise = Msf.Events.FireWithPromise(Msf.EventNames.ShowLoading, "Sending request");
 
             var factory = GetSelectedFactory();
-
+            
+            
             Msf.Client.Lobbies.CreateAndJoin(factory, properties, (lobby, error) =>
             {
                 loadingPromise.Finish();

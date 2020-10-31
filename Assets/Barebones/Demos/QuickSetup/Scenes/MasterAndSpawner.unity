@@ -256,11 +256,10 @@ MonoBehaviour:
   m_GameObject: {fileID: 359779008}
   m_Enabled: 1
   m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 1364a5b6065d00842ad7c8671eaf7091, type: 3}
+  m_Script: {fileID: 11500000, guid: 968e9d6929f23b7498fb60957882fb43, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  DefaultConnectionString: mongodb://localhost
-  DatabaseName: masterServer
+  Server: {fileID: 0}
 --- !u!1 &386377265
 GameObject:
   m_ObjectHideFlags: 0
@@ -369,7 +368,7 @@ PrefabInstance:
     - target: {fileID: 114509298780526028, guid: 377b961bdc153854193d9d2ce0d03f25,
         type: 3}
       propertyPath: ServerIp
-      value: 95.111.225.183
+      value: 127.0.0.1
       objectReference: {fileID: 0}
     - target: {fileID: 114509298780526028, guid: 377b961bdc153854193d9d2ce0d03f25,
         type: 3}
@@ -842,7 +841,7 @@ PrefabInstance:
     - target: {fileID: 114638258291320470, guid: 580e37fb274e9e947b21fe30c4e3bc93,
         type: 3}
       propertyPath: DefaultMachineIp
-      value: 95.111.225.183
+      value: 127.0.0.1
       objectReference: {fileID: 0}
     - target: {fileID: 114638258291320470, guid: 580e37fb274e9e947b21fe30c4e3bc93,
         type: 3}
