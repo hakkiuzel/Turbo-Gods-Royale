@@ -4,6 +4,7 @@ using System.Linq;
 using Barebones.MasterServer;
 using Barebones.Utils;
 using TLGFPowerJoysticks;
+ 
 using UnityEngine;
 using UnityEngine.Networking;
 using UnityEngine.Networking.NetworkSystem;
@@ -25,7 +26,7 @@ public class PlayerController : NetworkBehaviour
     public Text NamePrefab;
 
     public Transform NameTransform;
-
+   
 
 
     public float thrusterStrength;
@@ -46,13 +47,20 @@ public class PlayerController : NetworkBehaviour
 
     public GameObject bulletPrefab;
     public Transform bulletSpawn;
+    public Transform bulletSpawn2;
+    private Vector3 destination;
 
     private RaycastHit hit;
-    
-   
+
+     
     public int damage = 1;
 
     // Use this for initialization
+
+
+ 
+
+
     private void Awake()
     {
 
@@ -67,6 +75,7 @@ public class PlayerController : NetworkBehaviour
      void Start()
     {
         transform.name = Name;
+       
     }
 
 
@@ -123,7 +132,7 @@ public class PlayerController : NetworkBehaviour
         newRotation.z = Mathf.SmoothDampAngle(newRotation.z, CrossPlatformInputManager.GetAxis("Horizontal") * -turnRotationAngle, ref rotationVelocity, turnRotationSeekSpeed);
         transform.eulerAngles = newRotation;
 
-
+     
 
     }
 
@@ -132,12 +141,15 @@ public class PlayerController : NetworkBehaviour
     {
         var bullet = (GameObject)Instantiate(bulletPrefab, bulletSpawn.position, bulletSpawn.rotation);
 
-        bullet.GetComponent<Rigidbody>().velocity = bullet.transform.forward * 300;
+        bullet.GetComponent<Rigidbody>().velocity =  bullet.transform.forward * 400;
+       
 
         NetworkServer.Spawn(bullet);
 
         Destroy(bullet, 2.0f);
     }
+
+
 
 
 
@@ -172,37 +184,39 @@ public class PlayerController : NetworkBehaviour
             Debug.Log("idle");
         }
 
+
         if (CrossPlatformInputManager.GetButton("Fire1"))
         {
-            Debug.Log("feuer");
-            
+            CmdFire();
             Shoot();
+           
+
+
+
+
+
         }
 
 
 
 
 
-    }
-
-
-
-
-
-    void Shoot()
-    {
-        CmdFire();
-        if (Physics.Raycast(bulletSpawn.TransformPoint (0,0,0.5f), bulletSpawn.forward,out hit, 200))
+        void Shoot()
         {
-            Debug.Log(hit.transform.tag);
-        }
 
-        if (hit.transform.tag == "Player")
-        {
-            string uidentity = hit.transform.name;
-            CmdTellServerWhoWasShot(uidentity, damage);
-        }
+            if (Physics.Raycast(bulletSpawn.TransformPoint(0, 0, 0.5f), bulletSpawn.forward, out hit, 200))
+            {
+                Debug.Log(hit.transform.tag);
 
+            }
+
+            if (hit.transform.tag == "Player")
+            {
+                string uidentity = hit.transform.name;
+                CmdTellServerWhoWasShot(uidentity, damage);
+            }
+
+        }
     }
 
     [Command]
