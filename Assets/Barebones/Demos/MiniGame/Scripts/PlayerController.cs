@@ -19,7 +19,7 @@ public class PlayerController : NetworkBehaviour
 
     [SyncVar]
     public string Name;
-    private Transform mytransform;
+    public Transform mytransform;
 
     public Animator anim;
     private Text _nameObject;
@@ -48,7 +48,7 @@ public class PlayerController : NetworkBehaviour
     public GameObject bulletPrefab;
     public Transform bulletSpawn;
     public Transform bulletSpawn2;
-    private Vector3 destination;
+     
 
     private RaycastHit hit;
 
@@ -72,12 +72,19 @@ public class PlayerController : NetworkBehaviour
 
     }
 
-     void Start()
+
+    void Start()
     {
-        transform.name = Name;
-       
+        mytransform.name = Name;
     }
 
+     void Update()
+    {
+        if (mytransform.name=="" & mytransform.name == "MiniPlayer(Clone)")
+        {
+            mytransform.name = Name;
+        }
+    }
 
 
     void FixedUpdate()
@@ -234,7 +241,7 @@ public class PlayerController : NetworkBehaviour
     public void Setup(string username)
     {
         Name = username;
-       
+    
     }
 
 

@@ -20,27 +20,16 @@ public class Player_Health : NetworkBehaviour
         health = maxHealth;
         if (isLocalPlayer)
         {
-            healthText = GameObject.Find("Health_Text").GetComponent<Text>();
+            
             Healthbar = GameObject.Find("HealthBar").GetComponent<Image>();
 
         }
      
 
-        SetHealthText();
+         
          
     }
-
-    void SetHealthText()
-    {
-
-         
-            
-            healthText.text = "Health " + health.ToString();
-          
-        
-
-
-    }
+ 
 
 
     public void DetuctHealth(int dmg)
@@ -53,7 +42,7 @@ public class Player_Health : NetworkBehaviour
         health = hlth;
 
       
-        SetHealthText();
+        
     }
 
 
