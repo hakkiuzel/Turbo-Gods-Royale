@@ -48,8 +48,9 @@ public class PlayerController : NetworkBehaviour
     public GameObject bulletPrefab;
  
     public Transform bulletSpawn;
- 
-     
+    public Transform bulletSpawn2;
+
+
 
     private RaycastHit hit;
 
@@ -214,9 +215,9 @@ public class PlayerController : NetworkBehaviour
         void Shoot()
         {
 
-            if (Physics.Raycast(bulletSpawn.TransformPoint(0, 0, 0.5f), bulletSpawn.forward, out hit, 200))
+            if (Physics.Raycast(bulletSpawn2.TransformPoint(0, 0, 0.5f), bulletSpawn2.forward, out hit, 400))
             {
-                Debug.Log(hit.transform.tag);
+               
 
             }
 
