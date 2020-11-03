@@ -46,8 +46,9 @@ public class PlayerController : NetworkBehaviour
     private float groundAngleVelocity;
 
     public GameObject bulletPrefab;
+ 
     public Transform bulletSpawn;
-    public Transform bulletSpawn2;
+ 
      
 
     private RaycastHit hit;
@@ -68,20 +69,22 @@ public class PlayerController : NetworkBehaviour
        
         rb = GetComponent<Rigidbody>();
         anim = GetComponentInChildren<Animator>();
-        mytransform = transform;
+        
 
     }
 
 
     void Start()
     {
+        mytransform = transform;
         mytransform.name = Name;
     }
 
      void Update()
     {
-        if (mytransform.name=="" & mytransform.name == "MiniPlayer(Clone)")
+        if (mytransform.name==" " & mytransform.name == "MiniPlayer(Clone)")
         {
+            mytransform = transform;
             mytransform.name = Name;
         }
     }
@@ -156,8 +159,7 @@ public class PlayerController : NetworkBehaviour
         Destroy(bullet, 2.0f);
     }
 
-
-
+     
 
 
     private void LateUpdate()
@@ -195,6 +197,7 @@ public class PlayerController : NetworkBehaviour
         if (CrossPlatformInputManager.GetButton("Fire1"))
         {
             CmdFire();
+         
             Shoot();
            
 

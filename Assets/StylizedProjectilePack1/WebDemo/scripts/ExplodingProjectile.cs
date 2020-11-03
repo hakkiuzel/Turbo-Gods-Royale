@@ -106,7 +106,7 @@ public class ExplodingProjectile : MonoBehaviour
 
     void OnCollisionEnter(Collision collision)
     {
-        if (collision.gameObject.tag != "FX")
+        if (collision.gameObject.tag != "FX" || collision.gameObject.tag == "Player")
         {
             ContactPoint contact = collision.contacts[0];
             Quaternion rot = Quaternion.FromToRotation(Vector3.forward, contact.normal);
