@@ -52,6 +52,9 @@ public class Player_Health : NetworkBehaviour
         percentage = (float) health / (float) maxHealth ;
         
         Healthbar.fillAmount = Mathf.Lerp(Healthbar.fillAmount, percentage, lerpspeed);
+
+        Color healthcolor = Color.Lerp(Color.yellow, Color.green, percentage);
+        Healthbar.color = healthcolor;
     }
 
 }
