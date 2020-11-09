@@ -14,13 +14,12 @@ namespace Barebones.MasterServer
     {
         private GenericUIList<GameInfoPacket> _items;
         public GameObject CreateRoomWindow;
-        public LobbyCreateUi ui;
+
         public Button GameJoinButton;
         public GamesListUiItem ItemPrefab;
         public LayoutGroup LayoutGroup;
-        public bool create = true;
+
         protected IClientSocket Connection = Msf.Connection;
-        private float RequestedGameTimeout = 60f;
 
         // Use this for initialization
         protected virtual void Awake()
@@ -28,7 +27,6 @@ namespace Barebones.MasterServer
             _items = new GenericUIList<GameInfoPacket>(ItemPrefab.gameObject, LayoutGroup);
 
             Connection.Connected += OnConnectedToMaster;
-
         }
 
         protected virtual void HandleRoomsShowEvent(object arg1, object arg2)
@@ -40,19 +38,7 @@ namespace Barebones.MasterServer
         {
             if (Connection.IsConnected)
                 RequestRooms();
-
-            
-
         }
-
-
-        void Update()
-        {
- 
-
-        }
-
-       
 
         protected void OnConnectedToMaster()
         {
@@ -127,9 +113,16 @@ namespace Barebones.MasterServer
         {
 
 
+
+            var loadingPromise = Msf.Events.FireWithPromise(Msf.EventNames.ShowLoading, "Joining lobby");
+
             Msf.Client.Lobbies.JoinLobby(packet.Id, (lobby, error) =>
             {
 
+
+
+
+                loadingPromise.Finish();
 
                 if (lobby == null)
                 {
@@ -180,22 +173,14 @@ namespace Barebones.MasterServer
                 return;
             }
 
-
+            var loadingPromise = Msf.Events.FireWithPromise(Msf.EventNames.ShowLoading, "Retrieving Rooms list...");
 
             Msf.Client.Matchmaker.FindGames(games =>
             {
-
+                loadingPromise.Finish();
 
                 Setup(games);
             });
-
-
-
-
-
-
-
-
         }
 
         public void OnCreateGameClick()

@@ -11,8 +11,32 @@ public class TrackObject : MonoBehaviour
     public float minimumHeight;
 
     private Vector3 positionVelocity;
+    public Rigidbody rb;
 
-     void FixedUpdate()
+    
+
+
+
+     
+
+    public void StartCam()
+    {
+        while (distanceUp != 2)
+        {
+            distanceUp--;
+            
+            if (distanceUp == 2)
+            {
+                rb.isKinematic = false;
+            }
+        }
+        
+
+       
+    }
+
+
+    void FixedUpdate()
     {
 
         Vector3 newPosition = target.position + (target.forward * distanceBack);

@@ -3,8 +3,7 @@ using System.Collections;
 using System.Linq;
 using Barebones.MasterServer;
 using Barebones.Utils;
-using TLGFPowerJoysticks;
- 
+
 using UnityEngine;
 using UnityEngine.Networking;
 using UnityEngine.Networking.NetworkSystem;
@@ -17,10 +16,11 @@ public class PlayerController : NetworkBehaviour
 
 
 
+     
     [SyncVar]
     public string Name;
     public Transform mytransform;
-
+    private Vector3 destination;
     public Animator anim;
     private Text _nameObject;
     public Text NamePrefab;
@@ -56,7 +56,7 @@ public class PlayerController : NetworkBehaviour
 
      
     public int damage = 1;
-
+    public Canvas cav;
     // Use this for initialization
 
 
@@ -75,20 +75,31 @@ public class PlayerController : NetworkBehaviour
     }
 
 
-    void Start()
+    private void Update()
     {
-        mytransform = transform;
-        mytransform.name = Name;
-    }
+       
 
-     void Update()
-    {
-        if (mytransform.name==" " & mytransform.name == "MiniPlayer(Clone)")
+        if (mytransform.name == "" & mytransform.name == "MiniPlayer(Clone)")
         {
             mytransform = transform;
-            mytransform.name = Name;
+            mytransform.name = Name.ToString();
         }
+
+        
+ 
     }
+
+
+    void Start()
+    {
+        mytransform = this.transform;
+        mytransform.name = Name.ToString();
+
+        
+        
+    }
+
+
 
 
     void FixedUpdate()
@@ -126,13 +137,14 @@ public class PlayerController : NetworkBehaviour
             forwardForce = forwardForce * Time.deltaTime * rb.mass;
 
             rb.AddForce(forwardForce);
+            
         }
         else
         {
             rb.drag = 0;
         }
 
-
+       
 
 
         Vector3 turnTorque = Vector3.up * rotationRate * CrossPlatformInputManager.GetAxis("Horizontal");
@@ -143,8 +155,8 @@ public class PlayerController : NetworkBehaviour
         newRotation.z = Mathf.SmoothDampAngle(newRotation.z, CrossPlatformInputManager.GetAxis("Horizontal") * -turnRotationAngle, ref rotationVelocity, turnRotationSeekSpeed);
         transform.eulerAngles = newRotation;
 
-     
 
+        
     }
 
     [Command]
@@ -152,7 +164,7 @@ public class PlayerController : NetworkBehaviour
     {
         var bullet = (GameObject)Instantiate(bulletPrefab, bulletSpawn.position, bulletSpawn.rotation);
 
-        bullet.GetComponent<Rigidbody>().velocity =  bullet.transform.forward * 400;
+        bullet.GetComponent<Rigidbody>().velocity = bulletSpawn.transform.forward * 300;
        
 
         NetworkServer.Spawn(bullet);
@@ -160,7 +172,8 @@ public class PlayerController : NetworkBehaviour
         Destroy(bullet, 2.0f);
     }
 
-     
+
+
 
 
     private void LateUpdate()
@@ -197,9 +210,13 @@ public class PlayerController : NetworkBehaviour
 
         if (CrossPlatformInputManager.GetButton("Fire1"))
         {
+            
+            
             CmdFire();
-         
             Shoot();
+            
+         
+          
            
 
 
@@ -215,11 +232,8 @@ public class PlayerController : NetworkBehaviour
         void Shoot()
         {
 
-            if (Physics.Raycast(bulletSpawn2.TransformPoint(0, 0, 0.5f), bulletSpawn2.forward, out hit, 400))
-            {
-               
-
-            }
+            Physics.Raycast(bulletSpawn.transform.position, bulletSpawn.forward, out hit, 400);
+         
 
             if (hit.transform.tag == "Player")
             {

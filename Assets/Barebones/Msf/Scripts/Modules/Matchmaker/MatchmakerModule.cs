@@ -48,9 +48,7 @@ namespace Barebones.MasterServer
                 list.AddRange(provider.GetPublicGames(message.Peer, filters));
             }
 
-            // Convert to generic list and serialize to bytes
-            /* var bytes = list.Select(l => (ISerializablePacket)l).ToBytes(); */
-
+            list.RemoveAll(i => i.hasStarted);
             var bytes = list.Where(i => i.MaxPlayers != i.OnlinePlayers).Select(l => (ISerializablePacket)l).ToBytes();
 
             message.Respond(bytes, ResponseStatus.Success);

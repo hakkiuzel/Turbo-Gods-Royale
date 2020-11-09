@@ -57,8 +57,9 @@ public class MiniPlayerController : NetworkBehaviour
     {
         _characterController = GetComponent<CharacterController>();
         _characterController.detectCollisions = false;
+        StartCoroutine(DisplayName());
+        
 
-      
     }
 
     public void Setup(string username)
@@ -72,16 +73,7 @@ public class MiniPlayerController : NetworkBehaviour
     {
         base.OnStartAuthority();
 
-        // Change colors
-        var color = CurrentPlayerColor;
-        Direction.color = new Color(color.r, color.g, color.b, 0.5f);
-        Shape.GetComponent<MeshRenderer>().material.color = color;
-
-        // Notify UI
-        if (MiniGameUi.Instance != null)
-        {
-            MiniGameUi.Instance.OnPlayerSpawned(this);
-        }
+        
     }
 
     // Update is called once per frame

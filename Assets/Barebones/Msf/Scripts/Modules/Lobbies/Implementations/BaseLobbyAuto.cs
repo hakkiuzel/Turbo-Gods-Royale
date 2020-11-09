@@ -8,8 +8,9 @@ namespace Barebones.MasterServer
 {
     public class BaseLobbyAuto : BaseLobby
     {
-        public float WaitSecondsAfterMinPlayersReached = 2;
+        public float WaitSecondsAfterMinPlayersReached = 10;
         public float WaitSecondsAfterFullTeams = 5;
+
 
         public BaseLobbyAuto(int lobbyId, IEnumerable<LobbyTeam> teams, LobbiesModule module, LobbyConfig config) : base(lobbyId, teams, module, config)
         {
@@ -42,6 +43,11 @@ namespace Barebones.MasterServer
                     continue;
                 }
 
+                if (PlayerCount == MinPlayers)
+                {
+                    hasStarted = true;
+                }
+
                 // Check if there are teams that don't
                 // meet the minimal requirement
                 var lackingTeam = Teams.Values.FirstOrDefault(t => t.MinPlayers > t.PlayerCount);
@@ -69,6 +75,7 @@ namespace Barebones.MasterServer
                 if (timeToWait <= 0)
                 {
                     StartGame();
+                    hasStarted = true;
                     break;
                 }
             }

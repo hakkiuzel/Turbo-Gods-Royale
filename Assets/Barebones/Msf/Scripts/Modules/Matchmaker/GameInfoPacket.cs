@@ -13,6 +13,7 @@ namespace Barebones.MasterServer
         public bool IsPasswordProtected;
         public int MaxPlayers;
         public int OnlinePlayers;
+        public bool hasStarted;
         public Dictionary<string, string> Properties;
 
         public override void ToBinaryWriter(EndianBinaryWriter writer)
@@ -23,6 +24,7 @@ namespace Barebones.MasterServer
             writer.Write(Name);
 
             writer.Write(IsPasswordProtected);
+            writer.Write(hasStarted);
             writer.Write(MaxPlayers);
             writer.Write(OnlinePlayers);
             writer.Write(Properties);
@@ -32,10 +34,11 @@ namespace Barebones.MasterServer
         {
             Address = reader.ReadString();
             Id = reader.ReadInt32();
-            Type = (GameInfoType) reader.ReadInt32();
+            Type = (GameInfoType)reader.ReadInt32();
             Name = reader.ReadString();
 
             IsPasswordProtected = reader.ReadBoolean();
+            hasStarted = reader.ReadBoolean();
             MaxPlayers = reader.ReadInt32();
             OnlinePlayers = reader.ReadInt32();
             Properties = reader.ReadDictionary();

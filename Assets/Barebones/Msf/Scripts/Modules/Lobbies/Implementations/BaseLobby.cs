@@ -3,7 +3,6 @@ using System.Collections.Generic;
 using System.Linq;
 using Barebones.Networking;
 using UnityEngine;
-using Barebones.Logging;
 
 namespace Barebones.MasterServer
 {
@@ -12,13 +11,11 @@ namespace Barebones.MasterServer
         private LobbyState _state;
         private string _statusText = "";
         private LobbyMember _gameMaster;
-
+        public bool hasStarted { get; set; }
         public event Action<LobbyMember> PlayerAdded;
         public event Action<LobbyMember> PlayerRemoved;
 
         public event Action<ILobby> Destroyed;
-
-        public BmLogger Logger = Msf.Create.Logger(typeof(BaseLobby).Name);
 
         protected Dictionary<string, LobbyMember> Members;
         protected Dictionary<int, LobbyMember> MembersByPeerId;
@@ -115,7 +112,7 @@ namespace Barebones.MasterServer
 
             if (playerExt.CurrentLobby != null)
             {
-                error = "You're already in a lobby";
+                error = "Lobby is full. Creating new Lobby";
                 return false;
             }
 
@@ -123,37 +120,37 @@ namespace Barebones.MasterServer
 
             if (username == null)
             {
-                error = "Invalid username";
+                error = "Lobby is full. Creating new Lobby";
                 return false;
             }
 
             if (Members.ContainsKey(username))
             {
-                error = "Already in the lobby";
+                error = "Lobby is full. Creating new Lobby";
                 return false;
             }
 
             if (IsDestroyed)
             {
-                error = "Lobby is destroyed";
+                error = "Lobby is full. Creating new Lobby";
                 return false;
             }
 
             if (!IsPlayerAllowed(username, playerExt))
             {
-                error = "You're not allowed";
+                error = "Lobby is full. Creating new Lobby";
                 return false;
             }
 
             if (Members.Values.Count >= MaxPlayers)
             {
-                error = "Lobby is full";
+                error = "Lobby is full. Creating new Lobby";
                 return false;
             }
 
             if (!Config.AllowJoiningWhenGameIsLive && State != LobbyState.Preparations)
             {
-                error =  "Game is already in progress";
+                error = "Lobby is full. Creating new Lobby";
                 return false;
             }
 
@@ -165,13 +162,13 @@ namespace Barebones.MasterServer
 
             if (team == null)
             {
-                error = "Invalid lobby team";
+                error = "Lobby is full. Creating new Lobby";
                 return false;
             }
 
             if (!team.AddMember(member))
             {
-                error = "Not allowed to join a team";
+                error = "Lobby is full. Creating new Lobby";
                 return false;
             }
 
@@ -228,7 +225,7 @@ namespace Barebones.MasterServer
             Unsubscribe(playerExt.Peer);
 
             // Notify player himself that he's removed
-            playerExt.Peer.SendMessage((short) MsfOpCodes.LeftLobby, Id);
+            playerExt.Peer.SendMessage((short)MsfOpCodes.LeftLobby, Id);
 
             OnPlayerRemoved(member);
 
@@ -441,6 +438,9 @@ namespace Barebones.MasterServer
 
         public virtual bool StartGame()
         {
+
+            hasStarted = true;
+
             if (IsDestroyed)
                 return false;
 
@@ -811,11 +811,8 @@ namespace Barebones.MasterServer
         protected virtual void OnPlayerRemoved(LobbyMember member)
         {
             // Destroy lobby if last member left
-            if (!Config.KeepAliveWithZeroPlayers && Members.Count == 0)
-            {
+            if (Members.Count == 0)
                 Destroy();
-                Logger.Log(LogLevel.Info, string.Format("Lobby \"{0}\" destroyed due to last player leaving.", Name));
-            }
 
             // Notify others about the user who left
             Broadcast(MessageHelper.Create((short)MsfOpCodes.LobbyMemberLeft, member.Username));
@@ -849,7 +846,7 @@ namespace Barebones.MasterServer
             foreach (var lobbyMember in Members.Values)
                 SetReadyState(lobbyMember, false);
 
-            var msg = MessageHelper.Create((short) MsfOpCodes.LobbyStateChange, (int)state);
+            var msg = MessageHelper.Create((short)MsfOpCodes.LobbyStateChange, (int)state);
             Broadcast(msg);
         }
 
