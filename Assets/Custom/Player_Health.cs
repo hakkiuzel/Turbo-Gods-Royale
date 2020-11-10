@@ -16,11 +16,14 @@ public class Player_Health : NetworkBehaviour
     float lerpspeed;
     public GameObject explosion;
     public Text feedText;
+    public Text KillerText;
     public GameObject mytransform;
     public string myName;
 
-     
+
     [SyncVar(hook = "OnPlayerDead")] public string WhoISDead;
+
+    [SyncVar(hook = "OnPlayerDeadKillerName")] public string WhoISKiller;
 
     [SyncVar]
     public int isDead = 0;
@@ -30,6 +33,7 @@ public class Player_Health : NetworkBehaviour
         mytransform = this.gameObject;
         myName = mytransform.name.ToString();
         feedText = GameObject.FindGameObjectWithTag("feed").GetComponent<Text>();
+        KillerText= GameObject.FindGameObjectWithTag("killerFeedName").GetComponent<Text>();
         health = maxHealth;
         
             if (isLocalPlayer) {
@@ -43,9 +47,18 @@ public class Player_Health : NetworkBehaviour
 
 
 }
- 
+
+
+
+    public void InformTheKiller(string killerName)
+    {
+
+        WhoISKiller = killerName;
+    }
+
     public void Inform (string playerKilled)
     {
+         
         WhoISDead = playerKilled;
     }
 
@@ -80,11 +93,18 @@ public class Player_Health : NetworkBehaviour
  
     }
 
+    void OnPlayerDeadKillerName (string KillerName)
+    {
+        WhoISKiller = KillerName;
+        KillerText.text = KillerName;
+
+    }
 
     void OnPlayerDead(string playerName2)
     {
+       
         WhoISDead = playerName2;
-        feedText.text = WhoISDead + " is Dead";
+        feedText.text = WhoISKiller + " killed " + WhoISDead;
     }
 
  [Command]

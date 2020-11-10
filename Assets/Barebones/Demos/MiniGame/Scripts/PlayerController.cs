@@ -242,7 +242,8 @@ public class PlayerController : NetworkBehaviour
 
         if(go.GetComponent<Player_Health>().health <= 0)
         {
-         go.GetComponent<Player_Health>().Inform(uniqueID);
+            go.GetComponent<Player_Health>().InformTheKiller(Name);
+            go.GetComponent<Player_Health>().Inform(uniqueID);
         }
 
 
