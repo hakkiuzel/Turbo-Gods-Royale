@@ -18,10 +18,7 @@ public class gameStarter : NetworkBehaviour
 
 
     // Start is called before the first frame update
-    void Start()
-    {
-        cav = GameObject.FindGameObjectWithTag("start").GetComponent<Canvas>();
-    }
+   
 
     // Update is called once per frame
     void Update()

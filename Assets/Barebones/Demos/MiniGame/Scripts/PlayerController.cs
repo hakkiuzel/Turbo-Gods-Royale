@@ -19,12 +19,12 @@ public class PlayerController : NetworkBehaviour
      
     [SyncVar]
     public string Name;
-    public Transform mytransform;
+    public GameObject mytransform;
     private Vector3 destination;
     public Animator anim;
     private Text _nameObject;
     public Text NamePrefab;
-
+    
     public Transform NameTransform;
    
 
@@ -56,48 +56,34 @@ public class PlayerController : NetworkBehaviour
 
      
     public int damage = 1;
-    public Canvas cav;
+     
     // Use this for initialization
 
-
- 
-
+    [SyncVar]
+    public string feed;
 
     private void Awake()
     {
-
         StartCoroutine(DisplayName());
-       
-        rb = GetComponent<Rigidbody>();
-        anim = GetComponentInChildren<Animator>();
-        
-
+        mytransform = this.gameObject;
     }
-
-
-    private void Update()
-    {
-       
-
-        if (mytransform.name == "" & mytransform.name == "MiniPlayer(Clone)")
-        {
-            mytransform = transform;
-            mytransform.name = Name.ToString();
-        }
-
-        
- 
-    }
-
 
     void Start()
     {
-        mytransform = this.transform;
-        mytransform.name = Name.ToString();
 
         
+        rb = GetComponent<Rigidbody>();
+        anim = GetComponentInChildren<Animator>();
+        mytransform.name = Name;
         
+
     }
+
+
+     
+
+
+     
 
 
 
@@ -232,7 +218,7 @@ public class PlayerController : NetworkBehaviour
         void Shoot()
         {
 
-            Physics.Raycast(bulletSpawn.transform.position, bulletSpawn.forward, out hit, 400);
+            Physics.Raycast(bulletSpawn2.transform.position, bulletSpawn2.forward, out hit, 400);
          
 
             if (hit.transform.tag == "Player")
@@ -252,9 +238,12 @@ public class PlayerController : NetworkBehaviour
 
         go.GetComponent<Player_Health>().DetuctHealth(damage);
 
+        Player_Health healthy = go.GetComponent<Player_Health>();
+
+        
+
     }
-
-
+ 
 
     public void Setup(string username)
     {
@@ -291,7 +280,7 @@ public class PlayerController : NetworkBehaviour
         _nameObject.text = Name ?? ".";
         
         _nameObject.transform.SetParent(FindObjectOfType<Canvas>().transform);
-
+         
         while (true)
         {
             if ((_nameObject.text != Name) && (Name != null))
@@ -303,5 +292,6 @@ public class PlayerController : NetworkBehaviour
 
             yield return 0;
         }
+         
     }
 }
