@@ -44,7 +44,10 @@ public class Player_Health : NetworkBehaviour
 
 }
  
-
+    public void Inform (string playerKilled)
+    {
+        WhoISDead = playerKilled;
+    }
 
     public void DetuctHealth(int dmg)
     {
@@ -71,11 +74,7 @@ public class Player_Health : NetworkBehaviour
         Color healthcolor = Color.Lerp(Color.yellow, Color.green, percentage);
         Healthbar.color = healthcolor;
 
-        if (health <= 0 && isDead==0)
-        {
-            
-            CmdDie(myName);
-        }
+    
 
        
  

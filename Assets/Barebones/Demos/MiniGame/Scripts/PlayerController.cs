@@ -238,9 +238,15 @@ public class PlayerController : NetworkBehaviour
 
         go.GetComponent<Player_Health>().DetuctHealth(damage);
 
-        Player_Health healthy = go.GetComponent<Player_Health>();
+  
 
-        
+        if(go.GetComponent<Player_Health>().health <= 0)
+        {
+         go.GetComponent<Player_Health>().Inform(uniqueID);
+        }
+
+
+
 
     }
  
