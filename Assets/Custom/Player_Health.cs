@@ -4,6 +4,7 @@ using UnityEngine;
 using UnityEngine.UI;
 using UnityEngine.Networking;
 using System.Runtime.InteropServices;
+using UnityStandardAssets.CrossPlatformInput;
 
 public class Player_Health : NetworkBehaviour
 
@@ -19,6 +20,9 @@ public class Player_Health : NetworkBehaviour
     public Text KillerText;
     public GameObject mytransform;
     public string myName;
+    public GameObject container;
+    public Transform parentOFContainer;
+   
 
 
     [SyncVar(hook = "OnPlayerDead")] public string WhoISDead;
@@ -30,10 +34,12 @@ public class Player_Health : NetworkBehaviour
 
       void Start()
     {
+        parentOFContainer = GameObject.FindGameObjectWithTag("parent").transform;
+        
+         
         mytransform = this.gameObject;
         myName = mytransform.name.ToString();
-        feedText = GameObject.FindGameObjectWithTag("feed").GetComponent<Text>();
-        KillerText= GameObject.FindGameObjectWithTag("killerFeedName").GetComponent<Text>();
+        
         health = maxHealth;
         
             if (isLocalPlayer) {
@@ -49,16 +55,31 @@ public class Player_Health : NetworkBehaviour
 }
 
 
+    [ClientRpc]
+   void RpcInstantiate()
+    {
+     if (isDead == 0) {
+            isDead = 1;
+        Instantiate(container, parentOFContainer);
+            feedText = GameObject.FindGameObjectWithTag("feed").GetComponent<Text>();
+            KillerText = GameObject.FindGameObjectWithTag("killerFeedName").GetComponent<Text>();
+    }
+}
 
+[ClientRpc]
+void RpcFindFeed()
+    {
+        feedText = GameObject.FindGameObjectWithTag("feed").GetComponent<Text>();
+    }
     public void InformTheKiller(string killerName)
     {
-
+        RpcInstantiate();
         WhoISKiller = killerName;
     }
 
     public void Inform (string playerKilled)
     {
-         
+       
         WhoISDead = playerKilled;
     }
 
@@ -78,7 +99,7 @@ public class Player_Health : NetworkBehaviour
 
     void Update()
     {
-          
+          if (isLocalPlayer) { 
         lerpspeed = 3f * Time.deltaTime;
         percentage = (float) health / (float) maxHealth ;
         
@@ -87,16 +108,18 @@ public class Player_Health : NetworkBehaviour
         Color healthcolor = Color.Lerp(Color.yellow, Color.green, percentage);
         Healthbar.color = healthcolor;
 
-    
+        }
 
-       
- 
+             
+        
+
     }
 
     void OnPlayerDeadKillerName (string KillerName)
     {
+         
         WhoISKiller = KillerName;
-        KillerText.text = KillerName;
+        KillerText.text = KillerName + " killed ";
 
     }
 
@@ -104,7 +127,8 @@ public class Player_Health : NetworkBehaviour
     {
        
         WhoISDead = playerName2;
-        feedText.text = WhoISKiller + " killed " + WhoISDead;
+        feedText.text = playerName2;
+      
     }
 
  [Command]

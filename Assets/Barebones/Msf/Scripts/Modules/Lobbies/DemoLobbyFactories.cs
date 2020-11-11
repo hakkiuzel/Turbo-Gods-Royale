@@ -79,8 +79,8 @@ namespace Barebones.MasterServer
             // Create the teams
             var team = new LobbyTeam("")
             {
-                MaxPlayers = 2,
-                MinPlayers = 2
+                MaxPlayers = 3,
+                MinPlayers = 3
             };
 
             var config = new LobbyConfig();
@@ -94,6 +94,7 @@ namespace Barebones.MasterServer
 
             // Override properties with what user provided
             lobby.SetLobbyProperties(properties);
+            
 
             // Add control for the game speed
             lobby.AddControl(new LobbyPropertyData()

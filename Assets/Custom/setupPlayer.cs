@@ -100,7 +100,7 @@ public class setupPlayer : NetworkBehaviour
         else
         {
             GetComponent<PlayerController>().enabled = false;
-            
+         
             playerCam.SetActive(false);
             remoteIcon.SetActive(true);
             playerIcon.SetActive(false);

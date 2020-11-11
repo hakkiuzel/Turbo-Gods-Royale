@@ -44,7 +44,7 @@ namespace Barebones.MasterServer
             Properties = new Dictionary<string, string>();
             Teams = teams.ToDictionary(t => t.Name, t => t);
             Subscribers = new HashSet<IPeer>();
-
+           
             MaxPlayers = Teams.Values.Sum(t => t.MaxPlayers);
             MinPlayers = Teams.Values.Sum(t => t.MinPlayers);
         }
