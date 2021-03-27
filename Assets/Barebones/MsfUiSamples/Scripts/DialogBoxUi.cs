@@ -10,10 +10,7 @@ namespace Barebones.MasterServer
     /// </summary>
     public class DialogBoxUi : MonoBehaviour
     {
-
-        public LobbyCreateUi ui;
         private DialogBoxData _data;
-        public bool wasExectued = false;
 
         private Queue<DialogBoxData> _queue;
 
@@ -76,27 +73,6 @@ namespace Barebones.MasterServer
             AfterHandlingClick();
         }
 
-        void CreateGame()
-        {
-            ui.OnCreateClick();
-        }
-
-
-        void Update()
-        {
-            if (Text.text == "Lobby is full. Creating new Lobby")
-            {
-                if (!wasExectued)
-                {
-                    CreateGame();
-                    wasExectued = true;
-
-                }
-            }
-
-
-        }
-
         public void OnRightClick()
         {
             if (_data.RightButtonAction != null)
@@ -110,7 +86,6 @@ namespace Barebones.MasterServer
 
         public void ShowDialog(DialogBoxData data)
         {
-            ui.searchingError();
             _wasDialogShown = true;
             ResetAll();
 

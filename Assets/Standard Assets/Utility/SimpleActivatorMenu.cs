@@ -1,6 +1,8 @@
-using System;
-using UnityEngine;
-using UnityEngine.UI;
+ using System;
+     using UnityEngine;
+     using UnityEngine.SceneManagement;
+     using UnityStandardAssets.CrossPlatformInput;
+     using UnityEngine.UI;
 
 #pragma warning disable 618
 namespace UnityStandardAssets.Utility

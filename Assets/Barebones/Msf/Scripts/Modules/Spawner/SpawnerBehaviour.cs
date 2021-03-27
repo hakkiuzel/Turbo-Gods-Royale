@@ -28,7 +28,7 @@ public class SpawnerBehaviour : MonoBehaviour
     protected IClientSocket _connection;
 
     [Header("Spawner Settings")]
-    public string DefaultMachineIp = "127.0.0.1";
+    public string DefaultMachineIp = "164.68.97.82";
     public string DefaultExePath = "";
     public bool DefaultSpawnInBatchmode = false;
     public int MaxSpawnedProcesses = 5;

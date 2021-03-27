@@ -13,7 +13,9 @@ public class BasicsMsfStarterUi : MonoBehaviour
 
 	// Use this for initialization
 	void Start () {
-        StartMasterButton.onClick.AddListener(OnStartMasterClick);
+        var master = FindObjectOfType<MasterServerBehaviour>();
+        
+        master.StartServer(int.Parse(Port.text));
 
     }
 	

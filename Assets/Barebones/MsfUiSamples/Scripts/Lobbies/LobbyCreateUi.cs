@@ -19,22 +19,6 @@ namespace Barebones.MasterServer
         public InputField Name;
         public LobbyUi LobbyUi;
 
-      
-        public List<GameObject> Children;
-        public List<GameObject> GS_List;
-
-        // timeouts and waits
-        private float SearchGame = 10f;
-        private float CreateGame = 5f;
-
-        public Transform parent;
-        public GameObject Item1;
-        public GamesListUi ui;
-        public bool wasExecuted = false;
-        public bool wasRequested = false;
-        public bool allow = false;
-        public int secs = 0;
-
         /// <summary>
         /// List of available lobby factories
         /// </summary>
@@ -62,112 +46,7 @@ namespace Barebones.MasterServer
 
             MapDropdown.ClearOptions();
             MapDropdown.AddOptions(Maps.Select(t => t.MapTitle).ToList());
-
-
-
-            InvokeRepeating("OutputTime", 1f, 1f);  //1s delay, repeat every 1s
-
         }
-
-
-        void OutputTime()
-        {
-            secs++;
-            ui.OnRefreshClick();
-            if(secs == 10)
-            {
-                allow = true;
-            }
-
-
-        }
-
-
-
-        public void searchingError()
-        {
-            allow = false;
-            secs = 0;
-            GS_List.Clear();
-            InvokeRepeating("OutputTime", 1f, 1f);  //1s delay, repeat every 1s
-           
-
-
-        }
-
-        void Update()
-        {
-
-            if (allow)
-            {
-                getList();
-                GS_List = Children.Distinct().ToList();
-
-
-
-
-                if (GS_List.Count > 0)
-                {
-                     
-                    Item1 = GS_List[GS_List.Count - 1];
-                    Item1.GetComponent<GamesListUiItem>().SetIsSelected(true);
-                    Item1.GetComponent<GamesListUiItem>().SelectedBgColor = Color.red;
-                    if (!wasRequested)
-                    {
-                        ui.OnJoinGameClick();
-                        wasRequested = true;
-                    }
-
-
-
-                }
-
-                else
-                {
-                    if (!wasExecuted)
-                    {
-                        
-                        OnCreateClick();
-                        wasExecuted = true;
-                    }
-
-                }
-
-
-            }
-
-        }
-
-        public void resetBoold()
-        {
-            wasRequested = false;
-        }
-
-
-
-
-
-
-        public void getList()
-        {
-
-            foreach (Transform child in parent.transform)
-            {
-                if (child.tag == "ServerItem")
-                {
-                    Children.Add(child.gameObject);
-                    if (Children[0].gameObject.activeInHierarchy == false)
-                    {
-                        Children.RemoveAt(0);
-                    }
-
-                }
-            }
-
-
-        }
-
-
 
         /// <summary>
         /// Invoked, when user clicks a "Create" button
@@ -179,7 +58,6 @@ namespace Barebones.MasterServer
                 {MsfDictKeys.LobbyName, Name.text },
                 {MsfDictKeys.SceneName, GetSelectedMap() },
                 {MsfDictKeys.MapName, MapDropdown.captionText.text}
-
             };
 
             var loadingPromise = Msf.Events.FireWithPromise(Msf.EventNames.ShowLoading, "Sending request");
@@ -215,15 +93,6 @@ namespace Barebones.MasterServer
             });
         }
 
-        IEnumerator DoCheck()
-        {
-            for (; ; )
-            {
-                Children.Clear();
-                getList();
-                yield return new WaitForSeconds(.1f);
-            }
-        }
 
         /// <summary>
         /// Translates factory selection into the

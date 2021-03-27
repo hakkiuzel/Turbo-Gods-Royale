@@ -79,8 +79,8 @@ namespace Barebones.MasterServer
             // Create the teams
             var team = new LobbyTeam("")
             {
-                MaxPlayers = 3,
-                MinPlayers = 3
+                MaxPlayers = 2,
+                MinPlayers = 2
             };
 
             var config = new LobbyConfig();

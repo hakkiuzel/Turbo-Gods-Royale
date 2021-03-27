@@ -10,11 +10,12 @@ using UnityEngine.Networking.NetworkSystem;
 using UnityEngine.UI;
 using UnityStandardAssets.CrossPlatformInput;
 using Random = UnityEngine.Random;
+using UnityEngine.InputSystem;
 
 public class PlayerController : NetworkBehaviour
 {
 
-
+    public InputAction controls;
 
      
     [SyncVar]
@@ -81,7 +82,13 @@ public class PlayerController : NetworkBehaviour
 
 
      
+void OnEnable(){
+    controls.Enable();
+}
 
+void OnDisable(){
+    controls.Disable();
+}
 
      
 
@@ -91,6 +98,8 @@ public class PlayerController : NetworkBehaviour
     void FixedUpdate()
     {
 
+        Debug.Log(controls.ReadValue<Vector2>().ToString());
+        Vector2 input = controls.ReadValue<Vector2>();
 
         RaycastHit hit;
         foreach (Transform thruster in thrusters)
@@ -119,7 +128,7 @@ public class PlayerController : NetworkBehaviour
         {
             rb.drag = 1;
 
-            Vector3 forwardForce = transform.forward * acceleration * CrossPlatformInputManager.GetAxis("Vertical");
+            Vector3 forwardForce = transform.forward * acceleration * input.y;
             forwardForce = forwardForce * Time.deltaTime * rb.mass;
 
             rb.AddForce(forwardForce);
@@ -133,12 +142,12 @@ public class PlayerController : NetworkBehaviour
        
 
 
-        Vector3 turnTorque = Vector3.up * rotationRate * CrossPlatformInputManager.GetAxis("Horizontal");
+        Vector3 turnTorque = Vector3.up * rotationRate * input.x;
         turnTorque = turnTorque * Time.deltaTime * rb.mass;
         rb.AddTorque(turnTorque);
 
         Vector3 newRotation = transform.eulerAngles;
-        newRotation.z = Mathf.SmoothDampAngle(newRotation.z, CrossPlatformInputManager.GetAxis("Horizontal") * -turnRotationAngle, ref rotationVelocity, turnRotationSeekSpeed);
+        newRotation.z = Mathf.SmoothDampAngle(newRotation.z, input.x * -turnRotationAngle, ref rotationVelocity, turnRotationSeekSpeed);
         transform.eulerAngles = newRotation;
 
 
